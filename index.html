@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Countdown Timer with Dual Sounds</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .timer-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 5px;
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .timer-label {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .input-container {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #d35400;
+            font-size: 1.2rem;
+        }
+
+        .time-input {
+            width: 100%;
+            padding: 18px 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+            background-color: white;
+            box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Orbitron', sans-serif;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .time-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3), inset 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .preset-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(142, 45, 226, 0.3);
+        }
+
+        .preset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(142, 45, 226, 0.4);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-start {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            color: white;
+        }
+
+        .btn-stop {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-section {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .notification-section p {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .btn-notification {
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-notification:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .sound-controls {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sound-controls h3 {
+            color: #27ae60;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .sound-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .sound-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(to right, #27ae60, #219653);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+        }
+
+        .sound-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .feature h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .timer-display {
+                font-size: 3.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .sound-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timer-display {
+                font-size: 2.8rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .time-input {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .finished {
+            color: #e74c3c !important;
+            animation: pulse 0.5s infinite;
+        }
+
+        .notification-permission {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .notification-permission button {
+            background: white;
+            color: #19547b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-permission button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sound-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .sound-on {
+            color: #27ae60;
+        }
+
+        .sound-off {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-clock"></i> Enhanced Countdown Timer</h1>
+            <p>Set a timer with dual sounds: bell for last 3 seconds and beep when time's up. Get notified with visual alerts.</p>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-display" id="timerDisplay">01:00</div>
+            <div class="timer-label" id="timerLabel">Ready to Start</div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <div class="input-container">
+                    <label for="timeInput"><i class="fas fa-hourglass-half"></i> Enter seconds:</label>
+                    <input type="number" id="timeInput" class="time-input" min="1" max="3600" value="60" placeholder="Enter seconds">
+                </div>
+                
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-seconds="30">30 sec</button>
+                    <button class="preset-btn" data-seconds="60">1 min</button>
+                    <button class="preset-btn" data-seconds="300">5 min</button>
+                    <button class="preset-btn" data-seconds="600">10 min</button>
+                    <button class="preset-btn" data-seconds="900">15 min</button>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-start" id="startBtn">
+                        <i class="fas fa-play"></i> Start Timer
+                    </button>
+                    <button class="btn btn-stop" id="stopBtn" disabled>
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sound-controls">
+            <h3><i class="fas fa-volume-up"></i> Sound Controls</h3>
+            <p>Timer will play a bell sound for the last 3 seconds and a beep sound when time's up.</p>
+            <div class="sound-buttons">
+                <button class="sound-btn" id="testBellBtn">
+                    <i class="fas fa-bell"></i> Test Bell Sound
+                </button>
+                <button class="sound-btn" id="testBeepBtn">
+                    <i class="fas fa-bell"></i> Test Beep Sound
+                </button>
+                <button class="sound-btn" id="toggleSoundBtn">
+                    <i class="fas fa-volume-up"></i> Toggle Sounds
+                </button>
+            </div>
+            <div class="sound-status">
+                <i class="fas fa-volume-up" id="soundIcon"></i>
+                <span id="soundStatus">Sounds: ON</span>
+            </div>
+        </div>
+
+        <div class="notification-permission" id="notificationPermission" style="display: none;">
+            <span><i class="fas fa-bell"></i> Enable notifications to get alerts when timer finishes</span>
+            <button id="enableNotificationBtn">Enable</button>
+        </div>
+
+        <div class="notification-section">
+            <h3><i class="fas fa-bell"></i> Notification & Alert System</h3>
+            <p>When the timer reaches zero, you'll receive a browser notification and hear the beep sound.</p>
+            <button class="btn-notification" id="testNotificationBtn">
+                <i class="fas fa-bell"></i> Test Full Alert System
+            </button>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-hourglass-end"></i>
+                <h4>Dual Sound System</h4>
+                <p>Bell for last 3 seconds + Beep when timer ends</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bell"></i>
+                <h4>Visual Notification</h4>
+                <p>Browser notification when timer finishes</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-volume-up"></i>
+                <h4>Audio Controls</h4>
+                <p>Test sounds and toggle on/off as needed</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-palette"></i>
+                <h4>Beautiful Design</h4>
+                <p>Colorful, elegant and responsive interface</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Enhanced Countdown Timer with Dual Sounds | Web API: Notification + Audio | Made with <i class="fas fa-heart" style="color:#e74c3c;"></i> for learning</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerLabel = document.getElementById('timerLabel');
+        const timeInput = document.getElementById('timeInput');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const testNotificationBtn = document.getElementById('testNotificationBtn');
+        const enableNotificationBtn = document.getElementById('enableNotificationBtn');
+        const notificationPermission = document.getElementById('notificationPermission');
+        const presetButtons = document.querySelectorAll('.preset-btn');
+        const testBellBtn = document.getElementById('testBellBtn');
+        const testBeepBtn = document.getElementById('testBeepBtn');
+        const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+        const soundStatus = document.getElementById('soundStatus');
+        const soundIcon = document.getElementById('soundIcon');
+
+        // Timer variables
+        let countdown;
+        let timeLeft = 0;
+        let isRunning = false;
+        let totalSeconds = 0;
+        let soundsEnabled = true;
+        let lastSecondsPlayed = [false, false, false]; // Track if bell played for last 3 seconds
+
+        // Audio Context for better sound control
+        let audioContext;
+        let bellSoundBuffer;
+        let beepSoundBuffer;
+
+        // Initialize audio
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                createBellSound();
+                createBeepSound();
+                console.log("Audio initialized successfully");
+            } catch (e) {
+                console.log("Web Audio API not supported: ", e);
+                soundsEnabled = false;
+                updateSoundUI();
+            }
+        }
+
+        // Create bell sound for last 3 seconds
+        function createBellSound() {
+            if (!audioContext) return;
+            
+            const duration = 0.5;
+            const sampleRate = audioContext.sampleRate;
+            const frameCount = sampleRate * duration;
+            
+            bellSoundBuffer = audioContext.createBuffer(1, frameCount, sampleRate);
+            const channelData = bellSoundBuffer.getChannelData(0);
+            
+            // Create a pleasant bell-like sound
+            for (let i = 0; i < frameCount; i++) {
+                const t = i / sampleRate;
+                // Bell sound: combination of frequencies with decay
+                channelData[i] = 0.5 * Math.sin(2 * Math.PI * 800 * t) * Math.exp(-5 * t) +
+                                0.3 * Math.sin(2 * Math.PI * 1200 * t) * Math.exp(-6 * t) +
+                                0.2 * Math.sin(2 * Math.PI * 1600 * t) * Math.exp(-7 * t);
+            }
+        }
+
+        // Create beep sound for timer end
+        function createBeepSound() {
+            if (!audioContext) return;
+            
+            const duration = 0.8;
+            const sampleRate = audioContext.sampleRate;
+            const frameCount = sampleRate * duration;
+            
+            beepSoundBuffer = audioContext.createBuffer(1, frameCount, sampleRate);
+            const channelData = beepSoundBuffer.getChannelData(0);
+            
+            // Create an attention-grabbing beep
+            for (let i = 0; i < frameCount; i++) {
+                const t = i / sampleRate;
+                // Beep with a slight frequency sweep
+                const freq = 600 + 200 * Math.sin(2 * Math.PI * 2 * t);
+                channelData[i] = 0.5 * Math.sin(2 * Math.PI * freq * t) * Math.exp(-3 * t);
+            }
+        }
+
+        // Play bell sound
+        function playBellSound() {
+            if (!soundsEnabled || !audioContext || !bellSoundBuffer) return;
+            
+            try {
+                const source = audioContext.createBufferSource();
+                source.buffer = bellSoundBuffer;
+                
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = 0.5;
+                
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                source.start();
+            } catch (e) {
+                console.log("Error playing bell sound: ", e);
+            }
+        }
+
+        // Play beep sound
+        function playBeepSound() {
+            if (!soundsEnabled || !audioContext || !beepSoundBuffer) return;
+            
+            try {
+                const source = audioContext.createBufferSource();
+                source.buffer = beepSoundBuffer;
+                
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = 0.6;
+                
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                source.start();
+                
+                // Play a second beep after a short delay
+                setTimeout(() => {
+                    if (!soundsEnabled || !audioContext || !beepSoundBuffer) return;
+                    const source2 = audioContext.createBufferSource();
+                    source2.buffer = beepSoundBuffer;
+                    
+                    const gainNode2 = audioContext.createGain();
+                    gainNode2.gain.value = 0.4;
+                    
+                    source2.connect(gainNode2);
+                    gainNode2.connect(audioContext.destination);
+                    
+                    source2.start();
+                }, 400);
+            } catch (e) {
+                console.log("Error playing beep sound: ", e);
+            }
+        }
+
+        // Update sound UI
+        function updateSoundUI() {
+            if (soundsEnabled) {
+                soundStatus.textContent = "Sounds: ON";
+                soundStatus.className = "sound-status sound-on";
+                soundIcon.className = "fas fa-volume-up";
+                toggleSoundBtn.innerHTML = '<i class="fas fa-volume-mute"></i> Mute Sounds';
+            } else {
+                soundStatus.textContent = "Sounds: OFF";
+                soundStatus.className = "sound-status sound-off";
+                soundIcon.className = "fas fa-volume-mute";
+                toggleSoundBtn.innerHTML = '<i class="fas fa-volume-up"></i> Enable Sounds';
+            }
+        }
+
+        // Check notification permission on load
+        window.addEventListener('load', () => {
+            initAudio();
+            
+            if ('Notification' in window && Notification.permission === 'default') {
+                notificationPermission.style.display = 'flex';
+            }
+        });
+
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update timer display
+        function updateDisplay(seconds) {
+            timerDisplay.textContent = formatTime(seconds);
+            
+            // Change color based on time left
+            if (seconds <= 10 && seconds > 0) {
+                timerDisplay.classList.add('pulse');
+                
+                if (seconds <= 3) {
+                    // Last 3 seconds - red warning
+                    timerDisplay.style.background = 'linear-gradient(to right, #ff0000, #8b0000)';
+                    timerDisplay.style.webkitBackgroundClip = 'text';
+                    timerDisplay.style.backgroundClip = 'text';
+                    timerDisplay.style.color = 'transparent';
+                    
+                    // Play bell sound for each of the last 3 seconds
+                    if (seconds <= 3 && seconds > 0) {
+                        const index = 3 - seconds;
+                        if (!lastSecondsPlayed[index]) {
+                            playBellSound();
+                            lastSecondsPlayed[index] = true;
+                        }
+                    }
+                } else {
+                    // Last 10 seconds (but more than 3) - orange warning
+                    timerDisplay.style.background = 'linear-gradient(to right, #ff7e5f, #feb47b)';
+                    timerDisplay.style.webkitBackgroundClip = 'text';
+                    timerDisplay.style.backgroundClip = 'text';
+                    timerDisplay.style.color = 'transparent';
+                }
+            } else if (seconds === 0) {
+                timerDisplay.classList.add('finished');
+                timerDisplay.style.background = 'linear-gradient(to right, #ff0000, #8b0000)';
+                timerDisplay.style.webkitBackgroundClip = 'text';
+                timerDisplay.style.backgroundClip = 'text';
+                timerDisplay.style.color = 'transparent';
+            } else {
+                timerDisplay.classList.remove('pulse', 'finished');
+                timerDisplay.style.background = 'linear-gradient(to right, #6a11cb 0%, #2575fc 100%)';
+                timerDisplay.style.webkitBackgroundClip = 'text';
+                timerDisplay.style.backgroundClip = 'text';
+                timerDisplay.style.color = 'transparent';
+                
+                // Reset last seconds played tracking when not in last 3 seconds
+                if (seconds > 3) {
+                    lastSecondsPlayed = [false, false, false];
+                }
+            }
+        }
+
+        // Start the countdown
+        function startTimer() {
+            if (isRunning) return;
+            
+            if (timeLeft === 0) {
+                totalSeconds = parseInt(timeInput.value);
+                if (isNaN(totalSeconds) || totalSeconds <= 0) {
+                    alert('Please enter a valid number of seconds');
+                    return;
+                }
+                timeLeft = totalSeconds;
+            }
+            
+            isRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            timeInput.disabled = true;
+            timerLabel.textContent = 'Timer Running...';
+            
+            countdown = setInterval(() => {
+                timeLeft--;
+                updateDisplay(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    timerFinished();
+                }
+            }, 1000);
+        }
+
+        // Stop the countdown
+        function stopTimer() {
+            if (!isRunning) return;
+            
+            clearInterval(countdown);
+            isRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            timerLabel.textContent = 'Timer Paused';
+        }
+
+        // Reset the countdown
+        function resetTimer() {
+            clearInterval(countdown);
+            isRunning = false;
+            totalSeconds = parseInt(timeInput.value);
+            timeLeft = totalSeconds;
+            updateDisplay(timeLeft);
+            
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            timeInput.disabled = false;
+            timerLabel.textContent = 'Ready to Start';
+            timerDisplay.classList.remove('pulse', 'finished');
+            timerDisplay.style.background = 'linear-gradient(to right, #6a11cb 0%, #2575fc 100%)';
+            timerDisplay.style.webkitBackgroundClip = 'text';
+            timerDisplay.style.backgroundClip = 'text';
+            timerDisplay.style.color = 'transparent';
+            
+            // Reset last seconds played tracking
+            lastSecondsPlayed = [false, false, false];
+        }
+
+        // Handle timer finish
+        function timerFinished() {
+            isRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            timeInput.disabled = false;
+            timerLabel.textContent = 'Timer Finished!';
+            
+            // Play beep sound
+            playBeepSound();
+            
+            // Show notification if permitted
+            showNotification('Timer Finished!', 'Your countdown timer has reached zero.');
+        }
+
+        // Show notification
+        function showNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/3208/3208720.png',
+                    badge: 'https://cdn-icons-png.flaticon.com/512/3208/3208720.png'
+                });
+            } else if ('Notification' in window && Notification.permission === 'default') {
+                // Request permission if not yet asked
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification(title, {
+                            body: body,
+                            icon: 'https://cdn-icons-png.flaticon.com/512/3208/3208720.png'
+                        });
+                    }
+                });
+            }
+        }
+
+        // Test notification and sound
+        function testNotification() {
+            // Play test beep sound
+            playBeepSound();
+            
+            // Show test notification if permitted
+            showNotification('Test Notification', 'This is a test notification from the Countdown Timer.');
+        }
+
+        // Enable notifications
+        function enableNotifications() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        notificationPermission.style.display = 'none';
+                        alert('Notifications enabled! You will receive alerts when timer finishes.');
+                    } else {
+                        alert('Notifications permission denied. You will not receive browser alerts.');
+                    }
+                });
+            }
+        }
+
+        // Set preset time
+        function setPresetTime(seconds) {
+            timeInput.value = seconds;
+            resetTimer();
+        }
+
+        // Toggle sounds on/off
+        function toggleSounds() {
+            soundsEnabled = !soundsEnabled;
+            updateSoundUI();
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        testNotificationBtn.addEventListener('click', testNotification);
+        enableNotificationBtn.addEventListener('click', enableNotifications);
+        testBellBtn.addEventListener('click', playBellSound);
+        testBeepBtn.addEventListener('click', playBeepSound);
+        toggleSoundBtn.addEventListener('click', toggleSounds);
+
+        // Preset buttons
+        presetButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const seconds = parseInt(button.getAttribute('data-seconds'));
+                setPresetTime(seconds);
+            });
+        });
+
+        // Update display when input changes
+        timeInput.addEventListener('input', () => {
+            const seconds = parseInt(timeInput.value);
+            if (!isNaN(seconds) && seconds > 0) {
+                updateDisplay(seconds);
+            }
+        });
+
+        // Initialize display
+        updateDisplay(parseInt(timeInput.value));
+        updateSoundUI();
+    </script>
+</body>
+</html>
+
